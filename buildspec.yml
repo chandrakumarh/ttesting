@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    Docker: 19 
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - eval $(aws ecr get-login --region ap-southeast-2 --no-include-email)
+      - REPOSITORY_URI=464535411939.dkr.ecr.ap-southeast-2.amazonaws.com/devicetalking-dev-ecr
+      - IMAGE_TAG=1.0
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker login -u AWS -p $(aws ecr get-login-password --region ap-southeast-2) 464535411939.dkr.ecr.ap-southeast-2.amazonaws.com
+      - docker push 464535411939.dkr.ecr.ap-southeast-2.amazonaws.com/devicetalking-dev-ecr:$IMAGE_TAG
+     
+artifacts:
+    files: imagedefinitions.json
+   

@@ -1,0 +1,6 @@
+[
+  {
+    "name": "devicetalking-dev-ecr",
+    "imageUri":"464535411939.dkr.ecr.ap-southeast-2.amazonaws.com/devicetalking-dev-ecr:1.0"
+  }
+]
